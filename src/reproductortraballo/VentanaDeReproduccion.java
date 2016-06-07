@@ -5,10 +5,23 @@
  */
 package reproductortraballo;
 
+import ConexionAbases.Acceso;
+import static com.ibm.media.codec.audio.g723.G723Tables.s;
 import java.awt.Component;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.media.Manager;
 import javax.media.Player;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -16,24 +29,12 @@ import javax.media.Player;
  */
 public class VentanaDeReproduccion extends javax.swing.JFrame {
 
-URL direccionArchivo;
-Player reproductor;
+
+    URL direccionArchivo;
+    Player reproductor;
+    String tab = "reproductor";
     public VentanaDeReproduccion() {
-        try{
-            direccionArchivo= new URL("file:/C:\\Users\\balva\\Downloads\\OMI_-_Drop_In_The_Ocean.wav");
-            reproductor =Manager.createRealizedPlayer(direccionArchivo);
-            Component controles =reproductor.getControlPanelComponent();
-            
-            if(controles !=null){
-                this.add(controles);
-                controles.setLocation(0, 185);
-                controles.setSize(320,25);
-            }
-            
-            
-        }catch(Exception e){
-            System.out.print("ASDSD");
-        }
+
         initComponents();
     }
 
@@ -48,102 +49,28 @@ Player reproductor;
 
         jLabel1 = new javax.swing.JLabel();
         play = new javax.swing.JButton();
-        pausa = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        taboa = new javax.swing.JTable();
+        Mostrar = new javax.swing.JButton();
+        Insertar = new javax.swing.JButton();
+        eliminar = new javax.swing.JButton();
+        parar = new javax.swing.JButton();
+        seguinte = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\balva\\Pictures\\Saved Pictures\\82850.jpg")); // NOI18N
 
         play.setForeground(new java.awt.Color(255, 255, 255));
-        play.setIcon(new javax.swing.ImageIcon("C:\\Users\\balva\\Desktop\\Sin título.png")); // NOI18N
+        play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/reproductortraballo/Sin título.png"))); // NOI18N
         play.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 playActionPerformed(evt);
             }
         });
 
-        pausa.setText("||");
-        pausa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pausaActionPerformed(evt);
-            }
-        });
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        taboa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
@@ -166,10 +93,45 @@ Player reproductor;
                 {null, null, null, null}
             },
             new String [] {
-                "Nombre", "Url", "Artista", "Duracion"
+                "Nombre", "Artista", "direccion", "duracion"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(taboa);
+
+        Mostrar.setText("Mostrar");
+        Mostrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MostrarActionPerformed(evt);
+            }
+        });
+
+        Insertar.setText("Insertar");
+        Insertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                InsertarActionPerformed(evt);
+            }
+        });
+
+        eliminar.setText("Eliminar");
+        eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarActionPerformed(evt);
+            }
+        });
+
+        parar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/reproductortraballo/cuadrado-icono-6739-32.png"))); // NOI18N
+        parar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pararActionPerformed(evt);
+            }
+        });
+
+        seguinte.setText("Seguinte");
+        seguinte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                seguinteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,48 +140,186 @@ Player reproductor;
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(22, 22, 22)
                         .addComponent(play, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(101, 101, 101)
-                        .addComponent(pausa, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(114, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
+                        .addComponent(parar)
+                        .addGap(30, 30, 30)
+                        .addComponent(seguinte))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Mostrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Insertar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eliminar)))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(pausa))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(play)))
-                .addContainerGap(109, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Mostrar)
+                            .addComponent(Insertar)
+                            .addComponent(eliminar))))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(play, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(parar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(seguinte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playActionPerformed
-reproductor.start();      
+        try {
+
+            direccionArchivo = new URL("file:/" + obterDir());
+            reproductor = Manager.createRealizedPlayer(direccionArchivo);
+            Component controles = reproductor.getControlPanelComponent();
+
+            if (controles != null) {
+                this.add(controles);
+                controles.setLocation(0, 195);
+                controles.setSize(320, 25);
+            }
+
+        } catch (Exception e) {
+            System.out.print("Ocortreu algun erro");
+        }
+        reproductor.start();
+
     }//GEN-LAST:event_playActionPerformed
 
-    private void pausaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pausaActionPerformed
-    reproductor.stop();
-    }//GEN-LAST:event_pausaActionPerformed
+    private void MostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarActionPerformed
+        for (int i = 0; i < taboa.getRowCount(); i++) {
+            for (int j = 0; j < taboa.getColumnCount(); j++) {
+                taboa.setValueAt(null, i, j);
+            }
+        }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        ResultSet rs = Acceso.consultar("reproductor");
+        try {
+            while (rs.next()) {
+                for (int i = 0; i < taboa.getRowCount(); i++) {
+                    if (taboa.getValueAt(i, 0) == null) {
+                        taboa.setValueAt(rs.getString("Nombre"), i, 0);
+                        taboa.setValueAt(rs.getString("Artista"), i, 1);
+                        taboa.setValueAt(rs.getString("direccion"), i, 2);
+                        taboa.setValueAt(rs.getString("Duracion"), i, 3);
+                        break;
+                    }
+
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+      
+
+    }//GEN-LAST:event_MostrarActionPerformed
+
+    private void InsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertarActionPerformed
+
+        JPanel panel = new JPanel();
+        //JPanel panel1 = new JPanel();
+        JTextField nome = new JTextField(5);
+        JTextField artista = new JTextField(5);
+        JTextField direccion = new JTextField(5);
+        JTextField duracion = new JTextField(5);
+        panel.add(new JLabel("Nome:"));
+        panel.add(nome);
+        // panel.add(panel1);
+        panel.add(new JLabel("Artista:"));
+        panel.add(artista);
+        panel.add(new JLabel("Direccion:"));
+        panel.add(direccion);
+        panel.add(new JLabel("Duracion:"));
+        panel.add(duracion);
+        /*        JFileChooser chooser = new JFileChooser();
+         FileNameExtensionFilter filter = new FileNameExtensionFilter("wav");
+         chooser.setFileFilter(filter);
+         int option = chooser.showOpenDialog(panel1);
+         if (option == JFileChooser.APPROVE_OPTION) {
+         direccion.setText(chooser.getSelectedFile().getPath());
+         }*/
+
+        int n = JOptionPane.showConfirmDialog(null, panel, "Insertar", JOptionPane.OK_CANCEL_OPTION);
+        if (n == JOptionPane.OK_OPTION) {
+            String rep=direccion.getText().replaceAll("\\\\", "\\\\\\\\"); 
+                  Acceso.insertar(nome.getText(), artista.getText(), rep+"/"+nome.getText()+".wav", duracion.getText());
+            }
+        
+    }//GEN-LAST:event_InsertarActionPerformed
+
+    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
+        String direction = "direccion";
+        
+        try {
+            Acceso.eliminar(direction, obterDir(), tab);
+
+            for (int i = 0; i < taboa.getColumnCount(); i++) {
+                taboa.setValueAt(null, taboa.getSelectedRow(), i);
+            }
+        } catch (Exception e) {
+
+        }
+    }//GEN-LAST:event_eliminarActionPerformed
+
+    private void pararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pararActionPerformed
+        reproductor.close();
+
+    }//GEN-LAST:event_pararActionPerformed
+
+    private void seguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguinteActionPerformed
+ 
+   
+        int numeroAleatorio = (int) (Math.random()*7+1);
+        try {
+          
+      reproductor.stop();
+            direccionArchivo = new URL("file:/" + obterDirAleatoria(numeroAleatorio));
+            reproductor = Manager.createRealizedPlayer(direccionArchivo);
+            Component controles = reproductor.getControlPanelComponent();
+
+            if (controles != null) {
+                this.add(controles);
+                controles.setLocation(0, 195);
+                controles.setSize(320, 25);
+            }
+
+        } catch (Exception e) {
+            System.out.print("Ocorreu algun Erro");
+        }
+        reproductor.start();
+    }//GEN-LAST:event_seguinteActionPerformed
+    
+    private String obterDir() {
+      int row = taboa.getSelectedRow();
+        return String.valueOf(taboa.getValueAt(row, 2));
+    }
+  private String obterDirAleatoria(int fila) {
+        return String.valueOf(taboa.getValueAt(fila, 2));
+    }
+    public static void main(String args[]){
+
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -241,8 +341,8 @@ reproductor.start();
             java.util.logging.Logger.getLogger(VentanaDeReproduccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
+        Acceso.conectar("RM", "root", "<za123s", "localhost");
+       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new VentanaDeReproduccion().setVisible(true);
@@ -251,10 +351,14 @@ reproductor.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Insertar;
+    private javax.swing.JButton Mostrar;
+    private javax.swing.JButton eliminar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JButton pausa;
+    private javax.swing.JButton parar;
     private javax.swing.JButton play;
+    private javax.swing.JButton seguinte;
+    private javax.swing.JTable taboa;
     // End of variables declaration//GEN-END:variables
 }
